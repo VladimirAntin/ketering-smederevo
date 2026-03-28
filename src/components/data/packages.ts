@@ -1,0 +1,67 @@
+const packages: Package[] = [
+  {
+    title: 'Koktel Paket',
+    subtitle: 'Za manje proslave i cocktail party',
+    price: 'od 600 RSD/osobi',
+    features: [
+      'Mini sendviči (3 vrste)',
+      'Bruschette & kanapei',
+      'Slane mini pite',
+      'Voćni sto',
+      'Minimalno 30 osoba',
+    ],
+    cta: 'Poručite',
+    iconName: 'sparkles',
+    image: 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=900',
+  },
+  {
+    title: 'Standard Paket',
+    subtitle: 'Najpopularniji izbor za proslave',
+    price: 'od 950 RSD/osobi',
+    priceNote: 'Najpopularnije',
+    features: [
+      'Mini sendviči (5 vrsta)',
+      'Kanapei & bruschette',
+      'Slane & slatke mini pite',
+      'Voćni & sir sto',
+      'Mini kolači (3 vrste)',
+      'Minimalno 50 osoba',
+    ],
+    cta: 'Poručite',
+    highlighted: true,
+    iconName: 'layers',
+    image: 'https://images.pexels.com/photos/3184188/pexels-photo-3184188.jpeg?auto=compress&cs=tinysrgb&w=900',
+  },
+  {
+    title: 'Premium Paket',
+    subtitle: 'Luksuzni koktel za svečane prilike',
+    price: 'od 1.400 RSD/osobi',
+    features: [
+      'Mini sendviči (7 vrsta)',
+      'Kanapei & bruschette premium',
+      'Voćni & sir sto premium',
+      'Mini kolači & praline (5 vrsta)',
+      'Dekoracija stola',
+      'Konobar servis',
+    ],
+    cta: 'Poručite',
+    iconName: 'shieldCheck',
+    image: 'https://images.pexels.com/photos/291528/pexels-photo-291528.jpeg?auto=compress&cs=tinysrgb&w=900',
+  },
+  {
+    title: 'Svadba & Korporativni',
+    subtitle: 'Individualna ponuda za veće proslave',
+    price: 'Po dogovoru',
+    features: [
+      'Potpuno prilagođen meni',
+      'Dekoracija i postavljanje',
+      'Konobar servis',
+      'Dostava i iznajmljivanje',
+    ],
+    cta: 'Kontaktirajte Nas',
+    iconName: 'smile',
+    image: 'https://images.pexels.com/photos/587741/pexels-photo-587741.jpeg?auto=compress&cs=tinysrgb&w=900',
+  },
+];
+
+export {packages};

@@ -1,0 +1,22 @@
+@import 'tailwindcss';
+
+/* Ketering — topla amber/narančasta paleta */
+@theme {
+    --color-primary: #c2410c;
+    --color-primary-dark: #9a3412;
+    --color-secondary: #ea580c;
+    --color-secondary-dark: #c2410c;
+    --color-accent: #fff7ed;
+    --color-accent-dark: #fed7aa;
+}
+
+/* Keep anchor targets visible under the fixed navbar. */
+[id] {
+    scroll-margin-top: 5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+}
