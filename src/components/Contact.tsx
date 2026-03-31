@@ -9,6 +9,7 @@ import {motion} from 'framer-motion';
 
 type OrderData = {
   name: string;
+  email: string;
   phone: string;
   eventType: string;
   date: string;
@@ -18,30 +19,38 @@ type OrderData = {
 
 const EVENT_TYPES = [
   'Svadba',
-  'Rodjendан',
+  'Rodjendan',
   'Korporativni događaj',
   'Slava',
   'Maturska večera',
   'Ostalo',
 ];
 
-const underlineInput = 'w-full border-0 border-b-2 border-stone-200 bg-transparent pb-2 pt-1 text-stone-900 placeholder-transparent transition focus:border-primary focus:outline-none';
-const floatLabel = 'pointer-events-none absolute left-0 top-0 text-xs font-semibold tracking-widest text-primary uppercase transition-all peer-placeholder-shown:top-2 peer-placeholder-shown:text-sm peer-placeholder-shown:font-normal peer-placeholder-shown:tracking-normal peer-placeholder-shown:text-stone-400 peer-focus:top-0 peer-focus:text-xs peer-focus:font-semibold peer-focus:tracking-widest peer-focus:text-primary';
+const underlineInput = 'peer relative z-10 w-full border-0 border-b-2 border-stone-200 bg-transparent pb-2 pt-6 text-stone-900 transition focus:border-primary focus:outline-none';
+const floatLabel = 'pointer-events-none absolute left-0 top-2 z-20 bg-white px-1 text-sm font-normal text-stone-400 transition-all peer-focus:top-0 peer-focus:text-xs peer-focus:font-semibold peer-focus:tracking-widest peer-focus:text-primary peer-focus:uppercase';
+const errorText = 'mt-1 text-xs text-red-600';
+const getFloatLabelClass = (value?: string) =>
+  value
+    ? floatLabel + ' top-0 text-xs font-semibold tracking-widest text-primary uppercase'
+    : floatLabel;
 
 const ContactForm = () => {
   const {
     handleSubmit,
     control,
-    formState: {isSubmitted},
+    formState: {errors, isSubmitSuccessful},
   } = useForm<OrderData>({
-    defaultValues: {name: '', phone: '', eventType: '', date: '', guests: '', message: ''},
+    defaultValues: {name: '', email: '', phone: '', eventType: '', date: '', guests: '', message: ''},
+    mode: 'onBlur',
   });
+
+  const today = new Date().toISOString().split('T')[0];
 
   const onSubmit = (data: OrderData) => {
     console.log('Ketering narudžbina:', data);
   };
 
-  if (isSubmitted) {
+  if (isSubmitSuccessful) {
     return (
       <div className={'flex flex-col items-center justify-center py-12 text-center'}>
         <div className={'mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-primary/10 ring-4 ring-primary/20'}>
@@ -54,61 +63,93 @@ const ContactForm = () => {
   }
 
   return (
-    <form className={'space-y-8'} onSubmit={handleSubmit(onSubmit)}>
+    <form className={'space-y-8'} onSubmit={handleSubmit(onSubmit)} noValidate>
       <div className={'grid gap-8 sm:grid-cols-2'}>
         <Controller
           name={'name'}
           control={control}
-          rules={{required: true}}
+          rules={{
+            required: 'Unesite ime i prezime.',
+            minLength: {value: 2, message: 'Ime i prezime mora imati bar 2 karaktera.'},
+          }}
           render={({field}) => (
             <div className={'relative'}>
-              <input {...field} placeholder={'Ime i prezime'} className={underlineInput + ' peer'} />
-              <label className={floatLabel}>{'Ime i prezime'}</label>
+              <input {...field} id={'name'} placeholder={' '} className={underlineInput} aria-invalid={Boolean(errors.name)} />
+              <label htmlFor={'name'} className={getFloatLabelClass(field.value)}>{'Ime i prezime'}</label>
+              {errors.name && <p className={errorText}>{errors.name.message}</p>}
             </div>
           )}
         />
         <Controller
-          name={'phone'}
+          name={'email'}
           control={control}
-          rules={{required: true}}
+          rules={{
+            required: 'Unesite email adresu.',
+            pattern: {value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: 'Unesite ispravnu email adresu.'},
+          }}
           render={({field}) => (
             <div className={'relative'}>
-              <input {...field} type={'tel'} placeholder={'Broj telefona'} className={underlineInput + ' peer'} />
-              <label className={floatLabel}>{'Broj telefona'}</label>
+              <input {...field} id={'email'} type={'email'} placeholder={' '} className={underlineInput} aria-invalid={Boolean(errors.email)} />
+              <label htmlFor={'email'} className={getFloatLabelClass(field.value)}>{'Email'}</label>
+              {errors.email && <p className={errorText}>{errors.email.message}</p>}
             </div>
           )}
         />
       </div>
 
       <div className={'grid gap-8 sm:grid-cols-2'}>
+        <Controller
+          name={'phone'}
+          control={control}
+          rules={{
+            required: 'Unesite broj telefona.',
+            pattern: {value: /^\+?[0-9\s/-]{8,20}$/, message: 'Unesite ispravan broj telefona.'},
+          }}
+          render={({field}) => (
+            <div className={'relative'}>
+              <input {...field} id={'phone'} type={'tel'} placeholder={' '} className={underlineInput} aria-invalid={Boolean(errors.phone)} />
+              <label htmlFor={'phone'} className={getFloatLabelClass(field.value)}>{'Broj telefona'}</label>
+              {errors.phone && <p className={errorText}>{errors.phone.message}</p>}
+            </div>
+          )}
+        />
         <div className={'relative'}>
           <Controller
             name={'eventType'}
             control={control}
-            rules={{required: true}}
+            rules={{required: 'Izaberite tip proslave.'}}
             render={({field}) => (
               <>
                 <label className={'mb-1 block text-xs font-semibold tracking-widest text-primary uppercase'}>{'Tip proslave'}</label>
                 <select
                   {...field}
-                  className={'w-full border-0 border-b-2 border-stone-200 bg-transparent pb-2 pt-1 text-stone-900 transition focus:border-primary focus:outline-none'}>
+                  className={'w-full border-0 border-b-2 border-stone-200 bg-transparent pb-2 pt-1 text-stone-900 transition focus:border-primary focus:outline-none'}
+                  aria-invalid={Boolean(errors.eventType)}>
                   <option value={''} disabled>{'Izaberite...'}</option>
                   {EVENT_TYPES.map(type => (
                     <option key={type} value={type}>{type}</option>
                   ))}
                 </select>
+                {errors.eventType && <p className={errorText}>{errors.eventType.message}</p>}
               </>
             )}
           />
         </div>
+      </div>
+
+      <div className={'grid gap-8 sm:grid-cols-2'}>
         <Controller
           name={'guests'}
           control={control}
-          rules={{required: true}}
+          rules={{
+            required: 'Unesite broj gostiju.',
+            min: {value: 1, message: 'Broj gostiju mora biti veci od 0.'},
+          }}
           render={({field}) => (
             <div className={'relative'}>
-              <input {...field} type={'number'} min={'1'} placeholder={'Broj gostiju'} className={underlineInput + ' peer'} />
-              <label className={floatLabel}>{'Broj gostiju'}</label>
+              <input {...field} id={'guests'} type={'number'} min={'1'} placeholder={' '} className={underlineInput} aria-invalid={Boolean(errors.guests)} />
+              <label htmlFor={'guests'} className={getFloatLabelClass(field.value)}>{'Broj gostiju'}</label>
+              {errors.guests && <p className={errorText}>{errors.guests.message}</p>}
             </div>
           )}
         />
@@ -119,9 +160,18 @@ const ContactForm = () => {
         <Controller
           name={'date'}
           control={control}
-          rules={{required: true}}
+          rules={{required: 'Izaberite datum proslave.'}}
           render={({field}) => (
-            <input {...field} type={'date'} className={'w-full border-0 border-b-2 border-stone-200 bg-transparent pb-2 pt-1 text-stone-900 transition focus:border-primary focus:outline-none'} />
+            <>
+              <input
+                {...field}
+                type={'date'}
+                min={today}
+                className={'w-full border-0 border-b-2 border-stone-200 bg-transparent pb-2 pt-1 text-stone-900 transition focus:border-primary focus:outline-none'}
+                aria-invalid={Boolean(errors.date)}
+              />
+              {errors.date && <p className={errorText}>{errors.date.message}</p>}
+            </>
           )}
         />
       </div>
@@ -129,12 +179,14 @@ const ContactForm = () => {
       <Controller
         name={'message'}
         control={control}
+        rules={{maxLength: {value: 800, message: 'Napomena moze imati najvise 800 karaktera.'}}}
         render={({field}) => (
           <div className={'relative'}>
-            <textarea {...field} rows={3} placeholder={'Napomena'} className={'peer w-full resize-none border-0 border-b-2 border-stone-200 bg-transparent pb-2 pt-1 text-stone-900 placeholder-transparent transition focus:border-primary focus:outline-none'} />
-            <label className={'pointer-events-none absolute left-0 top-0 text-xs font-semibold tracking-widest text-primary uppercase transition-all peer-placeholder-shown:top-2 peer-placeholder-shown:text-sm peer-placeholder-shown:font-normal peer-placeholder-shown:tracking-normal peer-placeholder-shown:text-stone-400 peer-focus:top-0 peer-focus:text-xs peer-focus:font-semibold peer-focus:tracking-widest peer-focus:text-primary'}>
+            <textarea {...field} id={'message'} rows={3} placeholder={' '} className={'peer relative z-10 w-full resize-none border-0 border-b-2 border-stone-200 bg-transparent pb-2 pt-7 text-stone-900 transition focus:border-primary focus:outline-none'} aria-invalid={Boolean(errors.message)} />
+            <label htmlFor={'message'} className={getFloatLabelClass(field.value)}>
               {'Napomena (opciono)'}
             </label>
+            {errors.message && <p className={errorText}>{errors.message.message}</p>}
           </div>
         )}
       />
