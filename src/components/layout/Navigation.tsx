@@ -69,7 +69,7 @@ const Navigation = () => {
       'block w-full text-left py-2 px-3 rounded-lg text-sm transition-colors',
       isActive
         ? 'text-primary font-semibold bg-accent'
-        : 'text-gray-700 hover:text-primary hover:bg-accent',
+        : 'text-white hover:text-primary hover:bg-accent',
     );
 
   return (
@@ -123,7 +123,7 @@ const Navigation = () => {
 
         {/* Mobile menu */}
         {isOpen && (
-          <div className={'space-y-1 border-t border-white/10 bg-white py-4 md:hidden'}>
+          <div className={'space-y-1 border-t border-white/10  py-4 md:hidden'}>
             {homeLinks.map(item => (
               <Link
                 key={item.href}
