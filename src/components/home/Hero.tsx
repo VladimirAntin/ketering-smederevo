@@ -4,7 +4,6 @@ import ArrowIcon from '@icons/ArrowIcon';
 import Link from 'next/link';
 import {cn} from '@utils/CN';
 import WaveDivider from '@/components/WaveDivider';
-import {motion} from 'framer-motion';
 
 const SLIDES = [
   'https://images.pexels.com/photos/3184188/pexels-photo-3184188.jpeg?auto=compress&cs=tinysrgb&w=1920',
@@ -109,49 +108,6 @@ const Hero = () => {
           ))}
         </div>
       </div>
-
-      {/* Animated scroll arrow */}
-      <motion.a
-        href={'#services'}
-        aria-label={'Skroluj dole'}
-        className={'absolute bottom-24 left-1/2 z-10 -translate-x-1/2 flex-col items-center gap-1 hidden md:flex'}
-        initial={{opacity: 0, y: -8}}
-        animate={{opacity: 1, y: 0}}
-        transition={{delay: 1.2, duration: 0.6}}>
-        <span className={'text-xs font-medium tracking-widest text-white/40 uppercase'}>{'Skroluj'}</span>
-        <motion.div
-          animate={{y: [0, 8, 0]}}
-          transition={{duration: 1.4, repeat: Infinity, ease: 'easeInOut'}}>
-          <svg
-            width={28}
-            height={28}
-            viewBox={'0 0 24 24'}
-            fill={'none'}
-            stroke={'currentColor'}
-            strokeWidth={1.5}
-            strokeLinecap={'round'}
-            strokeLinejoin={'round'}
-            className={'text-white/60'}>
-            <path d={'M6 9l6 6 6-6'} />
-          </svg>
-        </motion.div>
-        <motion.div
-          animate={{y: [0, 8, 0]}}
-          transition={{duration: 1.4, repeat: Infinity, ease: 'easeInOut', delay: 0.2}}>
-          <svg
-            width={28}
-            height={28}
-            viewBox={'0 0 24 24'}
-            fill={'none'}
-            stroke={'currentColor'}
-            strokeWidth={1.5}
-            strokeLinecap={'round'}
-            strokeLinejoin={'round'}
-            className={'text-white/30'}>
-            <path d={'M6 9l6 6 6-6'} />
-          </svg>
-        </motion.div>
-      </motion.a>
 
       <WaveDivider fill={'#0c0a09'} />
     </section>
